@@ -1,3 +1,8 @@
+import csv
+import os
+from datetime import datetime
+
+
 print("Daily time tracking")
 print("Enter the hours worked for this session:")
 hours = float(input()) 
@@ -26,12 +31,22 @@ print(f"Date: {today}")
 
 # save to file
 
-with open("TIMETRACKING.txt", "a") as file:
-    file.write(f"Date: {today}\n")
-    file.write(f"Task: {task_name}\n")
-    file.write(f"Time worked: {hours} hours and {minutes} minutes\n")
-    file.write(f"Tasks completed: {tasks_completed}\n")
-    file.write(f"Total time worked in hours: {total_time:.2f} hours\n")
-    file.write(f"Earnings for this session: P {earnings:.2f}\n")
-    file.write("\n")  # Add a newline for separation between sessions
+CSV_FILE = "TIMETRACKING.csv"
+def save_to_csv(task_name, hours, minutes, tasks_completed, total_time, earnings, today):
+    file_exists = os.path.isfile(CSV_FILE)
+
+    with open(CSV_FILE, mode='a', newline='', encoding='utf-8') as f:
+        writer = csv.writer(f)
+
+        #header kung wala pang file
+
+        if not file_exists:
+            writer.writerow(["Task Name", "Hours Worked", "Minutes Worked", "Tasks Completed", "Total Time (hours)", "Earnings (P)", "Date"])
+
+            date = datetime.now().strftime("%B %d, %Y - %A")
+
+            writer.writerow([task_name, hours, minutes, tasks_completed, total_time, earnings, today])
+
+save_to_csv(task_name, hours, minutes, tasks_completed, total_time, earnings, today)
+
 print("Session data saved to TIMETRACKING.txt")
